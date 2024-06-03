@@ -150,9 +150,14 @@ class RoleResource extends Resource implements HasShieldPermissions
         return __('filament-shield::filament-shield.resource.label.roles');
     }
 
+    // public static function shouldRegisterNavigation(): bool
+    // {
+    //     return Utils::isResourceNavigationRegistered();
+    // }
+
     public static function shouldRegisterNavigation(): bool
     {
-        return Utils::isResourceNavigationRegistered();
+        return auth()->user()->hasAnyRole(['admin', 'super_admin']);
     }
 
     public static function getNavigationGroup(): ?string
@@ -206,8 +211,8 @@ class RoleResource extends Resource implements HasShieldPermissions
             ->map(function ($entity) {
                 $sectionLabel = strval(
                     static::shield()->hasLocalizedPermissionLabels()
-                    ? FilamentShield::getLocalizedResourceLabel($entity['fqcn'])
-                    : $entity['model']
+                        ? FilamentShield::getLocalizedResourceLabel($entity['fqcn'])
+                        : $entity['model']
                 );
 
                 return Forms\Components\Section::make($sectionLabel)
@@ -301,14 +306,14 @@ class RoleResource extends Resource implements HasShieldPermissions
         return static::shield()->hasSimpleResourcePermissionView()
             ? static::getTabFormComponentForSimpleResourcePermissionsView()
             : Forms\Components\Tabs\Tab::make('resources')
-                ->label(__('filament-shield::filament-shield.resources'))
-                ->visible(fn (): bool => (bool) Utils::isResourceEntityEnabled())
-                ->badge(static::getResourceTabBadgeCount())
-                ->schema([
-                    Forms\Components\Grid::make()
-                        ->schema(static::getResourceEntitiesSchema())
-                        ->columns(static::shield()->getGridColumns()),
-                ]);
+            ->label(__('filament-shield::filament-shield.resources'))
+            ->visible(fn (): bool => (bool) Utils::isResourceEntityEnabled())
+            ->badge(static::getResourceTabBadgeCount())
+            ->schema([
+                Forms\Components\Grid::make()
+                    ->schema(static::getResourceEntitiesSchema())
+                    ->columns(static::shield()->getGridColumns()),
+            ]);
     }
 
     public static function getCheckBoxListComponentForResource(array $entity): Component
@@ -388,7 +393,7 @@ class RoleResource extends Resource implements HasShieldPermissions
                     record: $record
                 )
             )
-            ->dehydrated(fn ($state) => ! blank($state))
+            ->dehydrated(fn ($state) => !blank($state))
             ->bulkToggleable()
             ->gridDirection('row')
             ->columns(static::shield()->getCheckboxListColumns())

@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('so_no')->nullable()->unique();
+            $table->foreignId('team_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignId('customer_id')->nullable()->constrained();
+            $table->string('kelas_pelanggan_id')->nullable()->constrained();
+            $table->string('kategori_pelanggan_id')->nullable()->constrained();
+            $table->decimal('subtotal', 8, 2)->nullable();
+            $table->integer('qty')->nullable();
+            $table->decimal('diskon', 18, 2)->nullable();
+            $table->decimal('ongkir', 18, 2)->nullable();
+            $table->decimal('grand_total', 18, 2)->nullable();
+            $table->date('tanggal')->nullable();
             $table->timestamps();
         });
     }

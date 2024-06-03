@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Models\Team;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -30,6 +31,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->profile()
             ->sidebarCollapsibleOnDesktop(true)
             ->colors([
                 'primary' => Color::Amber,
@@ -60,6 +63,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->tenant(Team::class)
             ->tenantRegistration(RegisterTeam::class)
+            ->tenantProfile(EditTeamProfile::class)
+            ->tenantMenu(function () {
+                return auth()->user()->hasRole('super_admin'); // Check for super_admin role
+            })
             ->plugins([
                 FilamentShieldPlugin::make()
             ]);
