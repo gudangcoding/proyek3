@@ -18,8 +18,21 @@ class Team extends Model
         return $this->BelongsToMany(User::class);
     }
 
-    public function role()
+
+    public function roles()
     {
         return $this->HasMany(Role::class);
+    }
+    public function kategori()
+    {
+        return $this->HasMany(Kategori::class);
+    }
+    public function produks()
+    {
+        return $this->HasMany(Produk::class);
+    }
+    public function satuan()
+    {
+        return $this->HasMany(Satuan::class);
     }
 }
